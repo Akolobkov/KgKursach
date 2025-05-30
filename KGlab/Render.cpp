@@ -24,7 +24,7 @@ extern OpenGL gl;
 Light light;
 #include "Camera.h"
 Camera camera;
-
+double _global_delta = 0;
 
 bool texturing = true;
 bool lightning = true;
@@ -50,7 +50,16 @@ void switchModes(OpenGL *sender, KeyEventArg arg)
 		break;
 	}
 }
-double t = 0;
+double t1 = 12;
+double t2 = 34;
+double t3 = 400;
+double t4 = 69;
+double t5 = 7;
+double ang1 = 45;
+double ang2 = 90;
+double ang3 = 234;
+double ang4 = 67;
+double fl = 0;
 void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 {
 	//конвертируем код клавиши в букву
@@ -58,12 +67,68 @@ void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 
 	switch (key)
 	{
+	case '1':
+		fl = 1;
+		break;
+	case '2':
+		fl = 2;
+		break;
+	case '3':
+		fl = 3;
+		break;
+	case '4':
+		fl = 4;
+		break;
+	case '5':
+		fl = 5;
+		break;
+
 	case 'Q':
-		t++;
+		if (fl == 1)
+			t1 = t1 + _global_delta/20;
+		if (fl == 2)
+			t2 = t2 + _global_delta / 20;
+		if (fl == 3)
+			t3 = t3 + _global_delta / 20;
+		if (fl == 4)
+			t4 = t4 + _global_delta / 20;
+		if (fl == 5)
+			t5 = t5 + _global_delta / 20;
 		break;
 	case 'E':
-		t--;
+		if (fl == 1)
+			t1 = t1 - _global_delta / 20;
+		if (fl == 2)
+			t2 = t2 - _global_delta / 20;
+		if (fl == 3)
+			t3 = t3 - _global_delta / 20;
+		if (fl == 4)
+			t4 = t4 - _global_delta / 20;
+		if (fl == 5)
+			t5 = t5 - _global_delta / 20;
 		break;
+	case 'W':
+		if (fl == 1)
+			ang1 = ang1 + _global_delta / 20;
+		if (fl == 2)
+			ang2 = ang2 + _global_delta / 20;
+		if (fl == 3)
+			ang3 = ang3 + _global_delta / 20;
+		if (fl == 4)
+			ang4 = ang4 + _global_delta / 20;
+		break;
+	case 'S':
+		if (fl == 1)
+			ang1 = ang1 - _global_delta / 20;
+		if (fl == 2)
+			ang2 = ang2 - _global_delta / 20;
+		if (fl == 3)
+			ang3 = ang3 - _global_delta / 20;
+		if (fl == 4)
+			ang4 = ang4 - _global_delta / 20;
+		break;
+	case '0':
+		t1 = t2 = t3 = t4 = ang1 = ang2 = ang3 = ang4 = 0;
 	}
 }
 
@@ -172,9 +237,35 @@ struct Point {
 	double y;
 	double z;
 };
+void normal(Point A, Point B, Point C) {
+	Point BA{ A.x - B.x,A.y - B.y,A.z - B.z };
+	Point BC{ C.x - B.x,C.y - B.y,C.z - B.z };
+	Point N{ BA.y * BC.z - BA.z * BC.y,
+	-BA.x * BC.z + BA.z * BC.x,
+	BA.x * BC.y - BA.y * BC.x };
+	//Нормализуем нормаль
+	double l = sqrt(N.x * N.x + N.y * N.y + N.z * N.z);
+	N.x /= l;
+	N.y /= l;
+	N.z /= l;
+	glNormal3dv((double*)&N);
+
+
+}
 Point up(Point a, double h) {
 	a.z = a.z + h;
 	return a;
+}
+void colorLight(double d1, double d2, double d3, double a1, double a2, double a3, double tr, double tra) {
+	float  amb[] = { a1, a2, a3, tr };
+	float dif[] = { d1, d2, d3, tra };
+	float spec[] = { 0, 0, 0, 1. };
+	float sh = 0.2f * 256;
+	glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+	glMaterialf(GL_FRONT, GL_SHININESS, sh);
+	glShadeModel(GL_SMOOTH); 
 }
 void quad(Point a, Point b, Point c, Point d) {
 	glBegin(GL_QUADS);
@@ -228,46 +319,65 @@ void section(double R1, double R2, double alfa, double beta, double h, double hf
 }
 
 void second_quater() {
-	glColor3d(0, 1, 0);
+	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
 	section(2, 4, 270, 295, -3);
-	glColor3d(1, 1, 0);
 	section(2, 4, 295, 310, -2);
-	glColor3d(0, 1, 1);
 	section(2, 4, 310, 320, -1);
-	glColor3d(0, 0, 1);
 	section(2, 4, 320, 330, 0);
-	glColor3d(1, 0, 0);
+	colorLight(1, 0, 1, 1, 0.2, 1, 1, 1);
 	circle(4, 5, 270, 330, 2);
-	glColor3d(0, 1, 0);
 	circle(5, 6, 270, 330, 0);
-	glColor3d(0, 0, 1);
 	circle(6, 7, 270, 330, 3);
-	glColor3d(1, 1, 0);
 	circle(7, 8, 270, 330, 1);
 }
 void first_quater() {
+	colorLight(1, 0., 1, 0.2, 0.4, 0.2, 1, 1);
+	glColor3d(0.7, 0, 0.7);
 	circle(2, 6, 30, 60, 4, 0.5);
 }
 void third_quater() {
+	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
+	glColor3d(0, 0, 1);
 	for (int i = 180; i < 270; i = i + 15) {
 		section(2, 4, i, i + 15, (i-180)/15);
 	}
+	glColor3d(0.4, 1, 0.4);
+	colorLight(0, 1, 0, 1, 0, 1, 1, 1);
 	circle(4, 7, 240, 270, -2);
+	colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
 	circle(4, 7, 180, 210, 2);
 }
 void fourtrh_quater() {
+	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
 	for (int i = 150; i < 180; i = i + 15) {
 		section(2, 4, i, i + 15, -(i-150)/15);
 	}
-	circle(4, 7, 150, 180, 6);
+	glColor3d(1, 0, 0);
+	colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
+	circle(4, 7, 150, 180, 2);
+	glColor3d(0.2, 0.6, 1);
+	colorLight(0, 0, 0.8, 0.4, 0.6, 0, 1, 1);
 	for (int i = 90; i < 150; i = i + 15) {
 		section(2, 3, i, i + 15, 4-(i-90)/15);
 	}
 	circle(3, 4, 90, 150, 0);
+	glColor3d(0.2, 0.6, 1);
 	for (int i = 90; i < 150; i = i + 15) {
 		section(4, 6, i, i + 15, 1+(i-90)/15);
 	}
+
 	circle(6, 8, 90, 150, 0);
+}
+void rubbish1() {
+	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
+	circle(1, 7, 70, 90, 2);
+	circle(1, 5, 100, 130, 2);
+}
+void rubbish2() {
+	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
+	for (int i = 90; i < 200; i = i + 15) {
+		section(4, 6, i, i + 15, 2 + (i - 90) / 15);
+	}
 }
 float view_matrix[16];
 double full_time = 0;
@@ -275,7 +385,7 @@ int location = 0;
 
 void Render(double delta_time)
 {
-
+	_global_delta = delta_time;
 
 	full_time += delta_time;
 
@@ -331,42 +441,55 @@ void Render(double delta_time)
 	//=============НАСТРОЙКА МАТЕРИАЛА==============
 
 
-	//настройка материала, все что рисуется ниже будет иметь этот метериал.
-	//массивы с настройками материала
-	float  amb[] = { 0.2, 0.2, 0.1, 1. };
-	float dif[] = { 0.4, 0.65, 0.5, 1. };
-	float spec[] = { 0.9, 0.8, 0.3, 1. };
-	float sh = 0.2f * 256;
-	//фоновая
-	glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
-	//дифузная
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
-	//зеркальная
-	glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
-	//размер блика
-	glMaterialf(GL_FRONT, GL_SHININESS, sh);
+	////настройка материала, все что рисуется ниже будет иметь этот метериал.
+	////массивы с настройками материала
+	//float  amb[] = { 0.2, 0.2, 0.2, 1. };
+	//float dif[] = { 0.5, 0.5, 0.5, 0.5 };
+	//float spec[] = { 0, 0, 0, 1. };
+	//float sh = 0.2f * 256;
+	////фоновая
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, amb);
+	////дифузная
+	//glMaterialfv(GL_FRONT, GL_DIFFUSE, dif);
+	////зеркальная
+	//glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+	////размер блика
+	//glMaterialf(GL_FRONT, GL_SHININESS, sh);
 
-	//чтоб было красиво, без квадратиков (сглаживание освещения)
-	glShadeModel(GL_SMOOTH); //закраска по Гуро      
-	//(GL_SMOOTH - плоская закраска)
+	////чтоб было красиво, без квадратиков (сглаживание освещения)
+	//glShadeModel(GL_SMOOTH); //закраска по Гуро      
+	////(GL_SMOOTH - плоская закраска)
 
 //============ РИСОВАТЬ ТУТ ==============
-	//glRotated(60, 1, 1, 1);
+	glRotated(60, 1, 1, 1);
 	glPushMatrix();
-	glRotated(t/600, 0, 0, 1);
+	glRotated(ang1, 1, 1, 0);
+	glRotated(t1, 0, 0, 1);
 	first_quater();
 	glPopMatrix();
-	glRotated(t/1800, 0, 0, 1);
+	glPushMatrix();
+	glRotated(t5, 0, 0, 1);
+	rubbish2();
+	glPopMatrix();
+	glPushMatrix();
+	glRotated(ang2, 1, -1, 0);
+	glRotated(t2, 0, 0, 1);
 	second_quater();
 	glPopMatrix();
-	glRotated(t / 1200, 0, 0, 1);
+	glPushMatrix();
+	glRotated(t5, 0, 0, 1);
+	rubbish1();
+	glPopMatrix();
+	glPushMatrix();
+	glRotated(ang3, -1, -1, 0);
+	glRotated(t3, 0, 0, 1);
 	third_quater();
 	glPopMatrix();
-	glRotated(t / 3600, 0, 0, 1);
+	glPushMatrix();
+	glRotated(ang4, -1, 1, 0);
+	glRotated(t4, 0, 0, 1);
 	fourtrh_quater();
 	glPopMatrix();
-	//квадратик станкина
-	
 	gl.KeyDownEvent.reaction(switchModesCustom);
 	
 
@@ -482,40 +605,38 @@ void Render(double delta_time)
 	//glPopMatrix();
 
 
-	////квадратик с ВБ
+	//квадратик с ВБ
 
 
-	//vb_sh.UseShader();
+	vb_sh.UseShader();
 
-	//glActiveTexture(GL_TEXTURE0);
-	//stankin_tex.Bind();
-	//glActiveTexture(GL_TEXTURE1);
-	//vb_tex.Bind();
+	glActiveTexture(GL_TEXTURE0);
+	stankin_tex.Bind();
+	glActiveTexture(GL_TEXTURE1);
+	vb_tex.Bind();
 
-	//location = glGetUniformLocationARB(vb_sh.program, "time");
-	//glUniform1fARB(location, full_time);
-	//location = glGetUniformLocationARB(vb_sh.program, "tex_stankin");
-	//glUniform1iARB(location, 0);
-	//location = glGetUniformLocationARB(vb_sh.program, "tex_vb");
-	//glUniform1iARB(location, 1);
+	location = glGetUniformLocationARB(vb_sh.program, "time");
+	glUniform1fARB(location, full_time);
+	location = glGetUniformLocationARB(vb_sh.program, "tex_stankin");
+	glUniform1iARB(location, 0);
+	location = glGetUniformLocationARB(vb_sh.program, "tex_vb");
+	glUniform1iARB(location, 1);
 
-	//glPushMatrix();
-
-	//glTranslated(0, 1.2, 0);
-	//	glBegin(GL_QUADS);
-	//	glNormal3d(0, 0, 1);
-	//	glTexCoord2d(1, 1);
-	//	glVertex3d(0.5, 0.5, 0);
-	//	glTexCoord2d(1, 0);
-	//	glVertex3d(0.5, -0.5, 0);
-	//	glTexCoord2d(0, 0);
-	//	glVertex3d(-0.5, -0.5, 0);
-	//	glTexCoord2d(0, 1);
-	//	glVertex3d(-0.5, 0.5, 0);
-	//glEnd();
+	glPushMatrix();
+		glBegin(GL_QUADS);
+		glNormal3d(0, 0, 1);
+		glTexCoord2d(1, 1);
+		glVertex3d(0.5, 0.5, 0);
+		glTexCoord2d(1, 0);
+		glVertex3d(0.5, -0.5, 0);
+		glTexCoord2d(0, 0);
+		glVertex3d(-0.5, -0.5, 0);
+		glTexCoord2d(0, 1);
+		glVertex3d(-0.5, 0.5, 0);
+	glEnd();
 
 
-	//glPopMatrix();
+	glPopMatrix();
 
 
 	////обезьянка без шейдеров
