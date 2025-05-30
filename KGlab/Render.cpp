@@ -67,6 +67,9 @@ void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 
 	switch (key)
 	{
+	case '6':
+		fl = 0;
+		break;
 	case '1':
 		fl = 1;
 		break;
@@ -169,8 +172,8 @@ Shader phong_sh;
 Shader vb_sh;
 Shader simple_texture_sh;
 
-Texture stankin_tex, vb_tex, monkey_tex;
-
+Texture stankin_tex, vb_tex, monkey_tex, line_tex;
+double timer = 0;
 
 
 void initRender()
@@ -199,7 +202,8 @@ void initRender()
 	stankin_tex.LoadTexture("textures/stankin.png");
 	vb_tex.LoadTexture("textures/vb.png");
 	monkey_tex.LoadTexture("textures/monkey.png");
-
+	line_tex.LoadTexture("textures/stanok.png");
+	
 
 	f.LoadModel("models//monkey.obj_m");
 	//==============НАСТРОЙКА ТЕКСТУР================
@@ -275,6 +279,7 @@ void quad(Point a, Point b, Point c, Point d) {
 	glVertex3d(d.x, d.y, d.z);
 	glEnd();
 }
+
 void circle(double R1, double R2, double alfa, double beta, double h, double hfig = 1) {
 	glPushMatrix();
 	glScaled(pow(0.98, h), pow(0.98, h), pow(0.98, h));
@@ -319,44 +324,81 @@ void section(double R1, double R2, double alfa, double beta, double h, double hf
 }
 
 void second_quater() {
+	if (fl == 2 and timer > 3) {
+		colorLight(0., 0., 1, 1, 1, 1, 1, 1);
+	}
+	else
 	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
 	section(2, 4, 270, 295, -3);
 	section(2, 4, 295, 310, -2);
 	section(2, 4, 310, 320, -1);
 	section(2, 4, 320, 330, 0);
-	colorLight(1, 0, 1, 1, 0.2, 1, 1, 1);
+	if (fl == 2 and timer > 3) {
+		colorLight(1, 0., 1, 1, 1, 1, 1, 1);
+	}
+	else
+		colorLight(1, 0, 1, 1, 0.2, 1, 1, 1);
 	circle(4, 5, 270, 330, 2);
 	circle(5, 6, 270, 330, 0);
 	circle(6, 7, 270, 330, 3);
 	circle(7, 8, 270, 330, 1);
 }
 void first_quater() {
-	colorLight(1, 0., 1, 0.2, 0.4, 0.2, 1, 1);
+
+	if (fl == 1 and timer > 3 ){
+		colorLight(1, 0., 1, 1, 1, 1, 1, 1);
+	}
+	else
+		colorLight(1, 0., 1, 0.2, 0.4, 0.2, 1, 1);
 	glColor3d(0.7, 0, 0.7);
 	circle(2, 6, 30, 60, 4, 0.5);
 }
 void third_quater() {
+	if (fl == 3 and timer > 3) {
+		colorLight(0, 0., 1, 1, 1, 1, 1, 1);
+	}
+	else
 	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
 	glColor3d(0, 0, 1);
 	for (int i = 180; i < 270; i = i + 15) {
 		section(2, 4, i, i + 15, (i-180)/15);
 	}
 	glColor3d(0.4, 1, 0.4);
+	if (fl == 3 and timer > 3) {
+		colorLight(0, 1., 0, 1, 1, 1, 1, 1);
+	}
+	else
 	colorLight(0, 1, 0, 1, 0, 1, 1, 1);
-	circle(4, 7, 240, 270, -2);
+		circle(4, 7, 240, 270, -2);
+	if (fl == 3 and timer > 3) {
+		colorLight(1, 0., 0, 1, 1, 1, 1, 1);
+	}
+	else
 	colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
 	circle(4, 7, 180, 210, 2);
 }
 void fourtrh_quater() {
-	colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
+	if (fl == 4 and timer > 3) {
+		colorLight(0, 0., 1, 1, 1, 1, 1, 1);
+	}
+	else
+		colorLight(0, 0, 1, 0.2, 0.4, 0, 1, 1);
 	for (int i = 150; i < 180; i = i + 15) {
 		section(2, 4, i, i + 15, -(i-150)/15);
 	}
 	glColor3d(1, 0, 0);
-	colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
+	if (fl == 4 and timer > 3) {
+		colorLight(1, 0., 0, 1, 1, 1, 1, 1);
+	}
+	else
+		colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
 	circle(4, 7, 150, 180, 2);
 	glColor3d(0.2, 0.6, 1);
-	colorLight(0, 0, 0.8, 0.4, 0.6, 0, 1, 1);
+	if (fl == 4 and timer > 3) {
+		colorLight(0, 0., 0.8, 1, 1, 1, 1, 1);
+	}
+	else
+		colorLight(0, 0, 0.8, 0.4, 0.6, 0, 1, 1);
 	for (int i = 90; i < 150; i = i + 15) {
 		section(2, 3, i, i + 15, 4-(i-90)/15);
 	}
@@ -369,11 +411,19 @@ void fourtrh_quater() {
 	circle(6, 8, 90, 150, 0);
 }
 void rubbish1() {
+	if (fl == 5 and timer > 3) {
+		colorLight(1, 1, 1, 0, 0, 0, 1, 0.1);
+	}
+	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
 	circle(1, 7, 70, 90, 2);
 	circle(1, 5, 100, 130, 2);
 }
 void rubbish2() {
+	if (fl == 5 and timer > 3) {
+		colorLight(1, 1, 1, 0, 0, 0, 1, 0.1);
+	}
+	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
 	for (int i = 90; i < 200; i = i + 15) {
 		section(4, 6, i, i + 15, 2 + (i - 90) / 15);
@@ -382,18 +432,17 @@ void rubbish2() {
 float view_matrix[16];
 double full_time = 0;
 int location = 0;
-
 void Render(double delta_time)
 {
 	_global_delta = delta_time;
-
+	timer += delta_time;
 	full_time += delta_time;
-
 	//натройка камеры и света
 	//в этих функциях находятся OGLные функции
 	//которые устанавливают параметры источника света
 	//и моделвью матрицу, связанные с камерой.
-
+	if (timer > 4)
+		timer = 0;
 	if (gl.isKeyPressed('F')) //если нажата F - свет из камеры
 	{
 		light.SetPosition(camera.x(), camera.y(), camera.z());
@@ -555,11 +604,9 @@ void Render(double delta_time)
 	//
 	//location = glGetUniformLocationARB(phong_sh.program, "light_pos_v");
 	//glUniform3fvARB(location,1,light_pos_v);
-	//
 	//glPushMatrix();
 
 	//glTranslated(0, 0, 0);
-	//
 
 	//glBegin(GL_QUADS);
 	//glNormal3d(0, 0, 1);
@@ -578,31 +625,30 @@ void Render(double delta_time)
 
 
 
-	////Квадратик без освещения
-
-	//Shader::DontUseShaders();
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
-
-	//glPushMatrix();
-
-	//glTranslated(1.2, 0, 0);
+	//Квадратик без освещения
 
 
-	//glBegin(GL_QUADS);
-	//glNormal3d(0, 0, 1);
-	//glTexCoord2d(1, 1);
-	//glVertex3d(0.5, 0.5, 0);
-	//glTexCoord2d(1, 0);
-	//glVertex3d(0.5, -0.5, 0);
-	//glTexCoord2d(0, 0);
-	//glVertex3d(-0.5, -0.5, 0);
-	//glTexCoord2d(0, 1);
-	//glVertex3d(-0.5, 0.5, 0);
-	//glEnd();
+	line_tex.Bind();
+	colorLight(1, 1, 1, 1, 1, 1, 1, 1);
+	glPushMatrix();
+
+	glTranslated(12, 0, 0);
 
 
-	//glPopMatrix();
+	glBegin(GL_QUADS);
+	glNormal3d(0, 0, 1);
+	glTexCoord2d(1, 1);
+	glVertex3d(4, 4, 0);
+	glTexCoord2d(1, 0);
+	glVertex3d(4, -4, 0);
+	glTexCoord2d(0, 0);
+	glVertex3d(-4, -4, 0);
+	glTexCoord2d(0, 1);
+	glVertex3d(-4, 4, 0);
+	glEnd();
+
+
+	glPopMatrix();
 
 
 	//квадратик с ВБ
@@ -624,15 +670,15 @@ void Render(double delta_time)
 
 	glPushMatrix();
 		glBegin(GL_QUADS);
-		glNormal3d(0, 0, 1);
+		glNormal3d(0, 0, 2);
 		glTexCoord2d(1, 1);
-		glVertex3d(0.5, 0.5, 0);
+		glVertex3d(1, 1, 0);
 		glTexCoord2d(1, 0);
-		glVertex3d(0.5, -0.5, 0);
+		glVertex3d(1, -1, 0);
 		glTexCoord2d(0, 0);
-		glVertex3d(-0.5, -0.5, 0);
+		glVertex3d(-1, -1, 0);
 		glTexCoord2d(0, 1);
-		glVertex3d(-0.5, 0.5, 0);
+		glVertex3d(-1, 1, 0);
 	glEnd();
 
 
@@ -712,9 +758,13 @@ void Render(double delta_time)
 	ss << L"G+ЛКМ двигать свет по вертекали" << std::endl;
 	ss << L"Коорд. света: (" << std::setw(7) <<  light.x() << "," << std::setw(7) << light.y() << "," << std::setw(7) << light.z() << ")" << std::endl;
 	ss << L"Коорд. камеры: (" << std::setw(7) << camera.x() << "," << std::setw(7) << camera.y() << "," << std::setw(7) << camera.z() << ")" << std::endl;
-	ss << L"Параметры камеры: R=" << std::setw(7) << camera.distance() << ",fi1=" << std::setw(7) << camera.fi1() << ",fi2=" << std::setw(7) << camera.fi2() << std::endl;
-	ss << L"delta_time: " << std::setprecision(5)<< delta_time << std::endl;
-	ss << L"full_time: " << std::setprecision(2) << full_time << std::endl;
+	//ss << L"Параметры камеры: R=" << std::setw(7) << camera.distance() << ",fi1=" << std::setw(7) << camera.fi1() << ",fi2=" << std::setw(7) << camera.fi2() << std::endl;
+	/*ss << L"delta_time: " << std::setprecision(5)<< delta_time << std::endl;
+	ss << L"full_time: " << std::setprecision(2) << full_time << std::endl;*/
+	ss << L"Выбран фрагмент: " << std::setprecision(0) << fl << std::endl;
+	ss << L"Чтобы двигать фрагмент, используйте Q и E" << std::endl;
+	ss << L"Чтобы вращать фрагмент, используйте W и S" << std::endl;
+
 
 	
 	text.setPosition(10, gl.getHeight() - 10 - 180);
