@@ -30,7 +30,11 @@ bool texturing = true;
 bool lightning = true;
 bool alpha = false;
 
-
+int first_done = 0;
+int second_done = 0;
+int third_done = 0;
+int fourth_done = 0;
+int rubbish_done = 0;
 //переключение режимов освещения, текстурирования, альфаналожения
 void switchModes(OpenGL *sender, KeyEventArg arg)
 {
@@ -59,6 +63,8 @@ double ang1 = 45;
 double ang2 = 90;
 double ang3 = 234;
 double ang4 = 67;
+double ang6 = 0;
+
 double fl = 0;
 void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 {
@@ -68,67 +74,95 @@ void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 	switch (key)
 	{
 	case '6':
-		fl = 0;
+		fl = 6;
 		break;
 	case '1':
-		fl = 1;
+		if (first_done == 0) {
+			fl = 1;
+		}
+		else {
+			fl = 0;
+		}
+
 		break;
 	case '2':
-		fl = 2;
+		if (second_done == 0) {
+			fl = 2;
+		}
+		else
+		{
+			fl = 0;
+		}
 		break;
 	case '3':
-		fl = 3;
+		if (third_done == 0) {
+			fl = 3;
+		}
+		else
+		{
+			fl = 0;
+		}
 		break;
 	case '4':
-		fl = 4;
+		if (fourth_done == 0) {
+			fl = 4;
+		}
+		else
+		{
+			fl = 0;
+		}
 		break;
 	case '5':
 		fl = 5;
 		break;
 
 	case 'Q':
-		if (fl == 1)
+		if (fl == 1 and first_done == 0)
 			t1 = t1 + _global_delta/20;
-		if (fl == 2)
+		if (fl == 2 and second_done == 0)
 			t2 = t2 + _global_delta / 20;
-		if (fl == 3)
+		if (fl == 3 and third_done == 0)
 			t3 = t3 + _global_delta / 20;
-		if (fl == 4)
+		if (fl == 4 and fourth_done == 0)
 			t4 = t4 + _global_delta / 20;
 		if (fl == 5)
 			t5 = t5 + _global_delta / 20;
 		break;
 	case 'E':
-		if (fl == 1)
+		if (fl == 1 and first_done == 0)
 			t1 = t1 - _global_delta / 20;
-		if (fl == 2)
+		if (fl == 2 and second_done == 0)
 			t2 = t2 - _global_delta / 20;
-		if (fl == 3)
+		if (fl == 3 and third_done == 0)
 			t3 = t3 - _global_delta / 20;
-		if (fl == 4)
+		if (fl == 4 and fourth_done == 0)
 			t4 = t4 - _global_delta / 20;
 		if (fl == 5)
 			t5 = t5 - _global_delta / 20;
 		break;
 	case 'W':
-		if (fl == 1)
+		if (fl == 1 and first_done == 0)
 			ang1 = ang1 + _global_delta / 20;
-		if (fl == 2)
+		if (fl == 2 and second_done == 0)
 			ang2 = ang2 + _global_delta / 20;
-		if (fl == 3)
+		if (fl == 3 and third_done == 0)
 			ang3 = ang3 + _global_delta / 20;
-		if (fl == 4)
+		if (fl == 4 and fourth_done == 0)
 			ang4 = ang4 + _global_delta / 20;
+		if (fl == 6)
+			ang6 = ang6 + _global_delta / 20;
 		break;
 	case 'S':
-		if (fl == 1)
+		if (fl == 1 and first_done == 0)
 			ang1 = ang1 - _global_delta / 20;
-		if (fl == 2)
+		if (fl == 2 and second_done == 0)
 			ang2 = ang2 - _global_delta / 20;
-		if (fl == 3)
+		if (fl == 3 and third_done == 0)
 			ang3 = ang3 - _global_delta / 20;
-		if (fl == 4)
+		if (fl == 4 and fourth_done == 0)
 			ang4 = ang4 - _global_delta / 20;
+		if (fl == 6)
+			ang6 = ang6 - _global_delta / 20;
 		break;
 	case '0':
 		t1 = t2 = t3 = t4 = ang1 = ang2 = ang3 = ang4 = 0;
@@ -345,7 +379,7 @@ void second_quater() {
 }
 void first_quater() {
 
-	if (fl == 1 and timer > 3 ){
+	if (fl == 1 and (timer > 3 or timer < 1)){
 		colorLight(1, 0., 1, 1, 1, 1, 1, 1);
 	}
 	else
@@ -354,7 +388,7 @@ void first_quater() {
 	circle(2, 6, 30, 60, 4, 0.5);
 }
 void third_quater() {
-	if (fl == 3 and timer > 3) {
+	if (fl == 3 and (timer > 3 or timer < 1)) {
 		colorLight(0, 0., 1, 1, 1, 1, 1, 1);
 	}
 	else
@@ -370,7 +404,7 @@ void third_quater() {
 	else
 	colorLight(0, 1, 0, 1, 0, 1, 1, 1);
 		circle(4, 7, 240, 270, -2);
-	if (fl == 3 and timer > 3) {
+	if (fl == 3 and (timer > 3 or timer < 1)) {
 		colorLight(1, 0., 0, 1, 1, 1, 1, 1);
 	}
 	else
@@ -378,7 +412,7 @@ void third_quater() {
 	circle(4, 7, 180, 210, 2);
 }
 void fourtrh_quater() {
-	if (fl == 4 and timer > 3) {
+	if (fl == 4 and (timer > 3 or timer < 1)) {
 		colorLight(0, 0., 1, 1, 1, 1, 1, 1);
 	}
 	else
@@ -387,14 +421,14 @@ void fourtrh_quater() {
 		section(2, 4, i, i + 15, -(i-150)/15);
 	}
 	glColor3d(1, 0, 0);
-	if (fl == 4 and timer > 3) {
+	if (fl == 4 and (timer > 3 or timer < 1)) {
 		colorLight(1, 0., 0, 1, 1, 1, 1, 1);
 	}
 	else
 		colorLight(1, 0, 0, 0, 0.2, 0.6, 1, 1);
 	circle(4, 7, 150, 180, 2);
 	glColor3d(0.2, 0.6, 1);
-	if (fl == 4 and timer > 3) {
+	if (fl == 4 and (timer > 3 or timer < 1)) {
 		colorLight(0, 0., 0.8, 1, 1, 1, 1, 1);
 	}
 	else
@@ -411,22 +445,34 @@ void fourtrh_quater() {
 	circle(6, 8, 90, 150, 0);
 }
 void rubbish1() {
-	if (fl == 5 and timer > 3) {
+	if (fl == 5 and (timer > 3 or timer < 1)) {
 		colorLight(1, 1, 1, 0, 0, 0, 1, 0.1);
 	}
 	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
 	circle(1, 7, 70, 90, 2);
-	circle(1, 5, 100, 130, 2);
+	circle(1, 5, 100, 120, 2);
 }
 void rubbish2() {
-	if (fl == 5 and timer > 3) {
+	if (fl == 5 and (timer > 3 or timer < 1)) {
 		colorLight(1, 1, 1, 0, 0, 0, 1, 0.1);
 	}
+
 	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
 	for (int i = 90; i < 200; i = i + 15) {
 		section(4, 6, i, i + 15, 2 + (i - 90) / 15);
+	}
+}
+void rubbish3() {
+	if (fl == 6 and (timer > 3 or timer < 1)) {
+		colorLight(1, 1, 1, 0, 0, 0, 1, 0.1);
+	}
+
+	else
+		colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
+	for (int i =50; i < 250; i = i + 15) {
+		section(4, 6, i, i + 15, 2 + (i-10) / 15);
 	}
 }
 float view_matrix[16];
@@ -510,11 +556,64 @@ void Render(double delta_time)
 	////(GL_SMOOTH - плоская закраска)
 
 //============ РИСОВАТЬ ТУТ ==============
+	if (t1 > 360 or t1 < -360)
+		t1 = 0;
+	if (t2 > 360 or t2 < -360)
+		t2 = 0;
+	if (t3 > 360 or t3 < -360)
+		t3 = 0;
+	if (t4 > 360 or t4 < -360)
+		t4 = 0;
+	if (t5 > 360 or t5 < -360)
+		t5 = 0;
+	if (ang1 > 360 or ang1 < -360)
+		ang1 = 0;
+	if (ang2 > 360 or ang2 < -360)
+		ang2 = 0;
+	if (ang3 > 360 or ang3 < -360)
+		ang3 = 0;
+	if (ang4 > 360 or ang4 < -360)
+		ang4 = 0;
+	if (ang6 > 360 or ang6 < -360)
+		ang6 = 0;
+	if (t1 < 3 and t1 > -3) {
+		if (ang1 < 3 and ang1 > -3) {
+			first_done = 1;
+
+		}
+	}
+	if (t2 < 3 and t2 > -3) {
+		if (ang2 < 3 and ang2 > -3) {
+			second_done = 1;
+		}
+	}
+	if (t3 < 3 and t3 > -3) {
+		if (ang3 < 3 and ang3 > -3) {
+			third_done = 1;
+		}
+	}
+	if (t4 < 3 and t4 > -3) {
+		if (ang4 < 3 and ang4 > -3) {
+			fourth_done = 1;
+		}
+	}
+	if (t5 < -118 and t5 > -125) {
+		if (ang6 < 185 and ang4 > 180) {
+			rubbish_done = 1;
+		}
+	}
+
 	glRotated(60, 1, 1, 1);
 	glPushMatrix();
 	glRotated(ang1, 1, 1, 0);
-	glRotated(t1, 0, 0, 1);
+	glRotated(t1, 0, 1, 0);
 	first_quater();
+	glPopMatrix();
+	glPushMatrix();
+	glRotated(90, 1, 0, 1);
+	glRotated(ang6, 0, 0, 1);
+	rubbish3();
+	glPopMatrix();
 	glPopMatrix();
 	glPushMatrix();
 	glRotated(t5, 0, 0, 1);
@@ -533,6 +632,11 @@ void Render(double delta_time)
 	glRotated(ang3, -1, -1, 0);
 	glRotated(t3, 0, 0, 1);
 	third_quater();
+	glPopMatrix();
+	glPushMatrix();
+	glRotated(-90, 0, 1, 1);
+	glRotated(ang6, 0, 0, 1);
+	rubbish3();
 	glPopMatrix();
 	glPushMatrix();
 	glRotated(ang4, -1, 1, 0);
@@ -756,14 +860,15 @@ void Render(double delta_time)
 	ss << L"F - Свет из камеры" << std::endl;
 	ss << L"G - двигать свет по горизонтали" << std::endl;
 	ss << L"G+ЛКМ двигать свет по вертекали" << std::endl;
-	ss << L"Коорд. света: (" << std::setw(7) <<  light.x() << "," << std::setw(7) << light.y() << "," << std::setw(7) << light.z() << ")" << std::endl;
-	ss << L"Коорд. камеры: (" << std::setw(7) << camera.x() << "," << std::setw(7) << camera.y() << "," << std::setw(7) << camera.z() << ")" << std::endl;
+	/*ss << L"Коорд. света: (" << std::setw(7) <<  light.x() << "," << std::setw(7) << light.y() << "," << std::setw(7) << light.z() << ")" << std::endl;
+	ss << L"Коорд. камеры: (" << std::setw(7) << camera.x() << "," << std::setw(7) << camera.y() << "," << std::setw(7) << camera.z() << ")" << std::endl;*/
 	//ss << L"Параметры камеры: R=" << std::setw(7) << camera.distance() << ",fi1=" << std::setw(7) << camera.fi1() << ",fi2=" << std::setw(7) << camera.fi2() << std::endl;
 	/*ss << L"delta_time: " << std::setprecision(5)<< delta_time << std::endl;
 	ss << L"full_time: " << std::setprecision(2) << full_time << std::endl;*/
 	ss << L"Выбран фрагмент: " << std::setprecision(0) << fl << std::endl;
 	ss << L"Чтобы двигать фрагмент, используйте Q и E" << std::endl;
 	ss << L"Чтобы вращать фрагмент, используйте W и S" << std::endl;
+	ss << L"нужные позиции у фрагментов: 1: " << first_done << " 2:" << second_done << " 3:" << third_done << " 4:" << fourth_done << std::endl;
 
 
 	
