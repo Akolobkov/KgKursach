@@ -34,7 +34,9 @@ int first_done = 0;
 int second_done = 0;
 int third_done = 0;
 int fourth_done = 0;
-int rubbish_done = 0;
+int rubbish1_done = 0;
+int rubbish2_done = 0;
+int win = 0;
 //переключение режимов освещения, текстурирования, альфаналожения
 void switchModes(OpenGL *sender, KeyEventArg arg)
 {
@@ -58,12 +60,12 @@ double t1 = 12;
 double t2 = 34;
 double t3 = 400;
 double t4 = 69;
-double t5 = 7;
+double t5 = 180;
 double ang1 = 45;
 double ang2 = 90;
 double ang3 = 234;
 double ang4 = 67;
-double ang6 = 0;
+double ang6 = 140;
 
 double fl = 0;
 void switchModesCustom(OpenGL* sender, KeyEventArg arg)
@@ -206,7 +208,7 @@ Shader phong_sh;
 Shader vb_sh;
 Shader simple_texture_sh;
 
-Texture stankin_tex, vb_tex, monkey_tex, line_tex;
+Texture stankin_tex, vb_tex, monkey_tex, line_tex, cong_tex;
 double timer = 0;
 
 
@@ -237,6 +239,7 @@ void initRender()
 	vb_tex.LoadTexture("textures/vb.png");
 	monkey_tex.LoadTexture("textures/monkey.png");
 	line_tex.LoadTexture("textures/stanok.png");
+	cong_tex.LoadTexture("textures/congratulations.jpg");
 	
 
 	f.LoadModel("models//monkey.obj_m");
@@ -450,8 +453,7 @@ void rubbish1() {
 	}
 	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
-	circle(1, 7, 70, 90, 2);
-	circle(1, 5, 100, 120, 2);
+	circle(1, 5, 342, 420, 2);
 }
 void rubbish2() {
 	if (fl == 5 and (timer > 3 or timer < 1)) {
@@ -460,8 +462,8 @@ void rubbish2() {
 
 	else
 	colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
-	for (int i = 90; i < 200; i = i + 15) {
-		section(4, 6, i, i + 15, 2 + (i - 90) / 15);
+	for (int i = 400; i < 500; i = i + 15) {
+		section(4, 6, i, i + 15, 2 + (i - 300) / 15);
 	}
 }
 void rubbish3() {
@@ -471,8 +473,8 @@ void rubbish3() {
 
 	else
 		colorLight(1, 1, 1, 1, 1, 1, 1, 0.001);
-	for (int i =50; i < 250; i = i + 15) {
-		section(4, 6, i, i + 15, 2 + (i-10) / 15);
+	for (int i =200; i < 540; i = i + 15) {
+		section(4, 6, i+10, i + 45, 2 + (i-120) / 15);
 	}
 }
 float view_matrix[16];
@@ -597,11 +599,23 @@ void Render(double delta_time)
 			fourth_done = 1;
 		}
 	}
-	if (t5 < -118 and t5 > -125) {
-		if (ang6 < 185 and ang4 > 180) {
-			rubbish_done = 1;
-		}
+	if (t5 < 3 and t5 > -3) {
+		rubbish1_done = 1;
 	}
+	else
+	{
+		rubbish1_done = 0;
+	}
+	if (ang6 < 3 and ang4 > -3) {
+		rubbish2_done = 1;
+	}
+	else {
+		rubbish2_done = 0;
+	}
+	if (first_done and second_done and third_done and fourth_done and rubbish1_done and rubbish2_done) {
+		win = 1;
+	}
+	
 
 	glRotated(60, 1, 1, 1);
 	glPushMatrix();
@@ -616,7 +630,7 @@ void Render(double delta_time)
 	glPopMatrix();
 	glPopMatrix();
 	glPushMatrix();
-	glRotated(t5, 0, 0, 1);
+	glRotated(t5-60, 0, 0, 1);
 	rubbish2();
 	glPopMatrix();
 	glPushMatrix();
@@ -625,7 +639,7 @@ void Render(double delta_time)
 	second_quater();
 	glPopMatrix();
 	glPushMatrix();
-	glRotated(t5, 0, 0, 1);
+	glRotated(t5-60, 0, 0, 1);
 	rubbish1();
 	glPopMatrix();
 	glPushMatrix();
@@ -731,8 +745,12 @@ void Render(double delta_time)
 
 	//Квадратик без освещения
 
-
-	line_tex.Bind();
+	if (!win)
+		line_tex.Bind();
+	else
+	{
+		cong_tex.Bind();
+	}
 	colorLight(1, 1, 1, 1, 1, 1, 1, 1);
 	glPushMatrix();
 
@@ -869,8 +887,13 @@ void Render(double delta_time)
 	ss << L"Чтобы двигать фрагмент, используйте Q и E" << std::endl;
 	ss << L"Чтобы вращать фрагмент, используйте W и S" << std::endl;
 	ss << L"нужные позиции у фрагментов: 1: " << first_done << " 2:" << second_done << " 3:" << third_done << " 4:" << fourth_done << std::endl;
-
-
+	if (!win) {
+		ss << rubbish1_done << rubbish2_done << win << std::endl;
+	}
+	else
+	{
+		ss << L"Вы победили!!!" << std::endl;
+	}
 	
 	text.setPosition(10, gl.getHeight() - 10 - 180);
 	text.setText(ss.str().c_str());
