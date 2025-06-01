@@ -8,13 +8,24 @@
 #include "GUItextRectangle.h"
 #include "MyShaders.h"
 #include "Texture.h"
-
+#include <mmsystem.h>
 
 #include "ObjLoader.h"
 
 
 #include "debout.h"
+#pragma comment(lib, "winmm.lib") 
 
+
+void PlayMusic(std::wstring music_name)
+{
+	PlaySound((LPCTSTR)music_name.c_str(), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+}
+
+void PlayWinSound(std::wstring music_name)
+{
+	PlaySound((LPCTSTR)music_name.c_str(), NULL, SND_FILENAME | SND_ASYNC);
+}
 
 
 //внутренняя логика "движка"
@@ -28,7 +39,7 @@ double _global_delta = 0;
 
 bool texturing = true;
 bool lightning = true;
-bool alpha = false;
+bool alpha = true;
 
 int first_done = 0;
 int second_done = 0;
@@ -68,6 +79,9 @@ double ang4 = 67;
 double ang6 = 140;
 
 double fl = 0;
+
+int count = 0;
+
 void switchModesCustom(OpenGL* sender, KeyEventArg arg)
 {
 	//конвертируем код клавиши в букву
@@ -272,6 +286,8 @@ void initRender()
 
 	camera.setPosition(2, 1.5, 1.5);
 	
+	PlayMusic(L"sounds/music.wav");
+
 }
 struct Point {
 	double x;
@@ -614,6 +630,12 @@ void Render(double delta_time)
 	}
 	if (first_done and second_done and third_done and fourth_done and rubbish1_done and rubbish2_done) {
 		win = 1;
+		if(win and count == 0)
+		{
+			PlayWinSound(L"sounds/win.wav");
+			count++;
+		}
+		
 	}
 	
 
